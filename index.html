@@ -112,6 +112,40 @@
     50%      { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
   }
 
+  /* the star of the show: spins in like an idiot, then never stops wobbling */
+  .hero {
+    display: block;
+    margin: clamp(1.8rem, 5vw, 3rem) auto 0;
+    width: clamp(140px, 34vw, 320px);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 4px solid #fff;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.35), 0 20px 60px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+    /* dramatic spin-in, then hand off to the infinite wobble */
+    animation:
+      heroSpinIn 1.6s cubic-bezier(0.18, 1.4, 0.4, 1) 6.6s forwards,
+      heroWobble 3.2s ease-in-out 8.2s infinite;
+  }
+
+  @keyframes heroSpinIn {
+    0%   { opacity: 0; transform: scale(0)    rotate(0deg);    }
+    60%  { opacity: 1; transform: scale(1.25) rotate(1080deg); }
+    100% { opacity: 1; transform: scale(1)    rotate(1080deg); }
+  }
+
+  /* never sits still — comedic perpetual teeter */
+  @keyframes heroWobble {
+    0%, 100% { transform: scale(1) rotate(-6deg); }
+    50%      { transform: scale(1.04) rotate(6deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero { animation: heroSpinIn 1s ease 6.6s forwards; }
+  }
+
   @media (max-width: 600px) {
     .subtitle { letter-spacing: 0.22em; }
     .bar { height: 6vh; }
@@ -127,6 +161,8 @@
   <main class="stage">
     <h1 class="title">hey guys</h1>
     <p class="subtitle">this website was made from the line at the tav</p>
+    <img id="hero" class="hero" src="tav.jpg" alt="me at the tav"
+         onerror="this.style.display='none'" />
   </main>
 
   <script>
