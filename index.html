@@ -115,11 +115,21 @@
     50%      { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
   }
 
-  /* the star of the show: spins in like an idiot, then never stops wobbling */
+  /* a tipsy wall of photos that spin in one after another */
+  .gallery {
+    margin: clamp(1.8rem, 5vw, 3rem) auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(0.9rem, 2.5vw, 1.8rem);
+    max-width: min(92vw, 900px);
+  }
+
+  /* each photo spins in like an idiot, then never stops wobbling */
   .hero {
     display: block;
-    margin: clamp(1.8rem, 5vw, 3rem) auto 0;
-    width: clamp(140px, 34vw, 320px);
+    width: clamp(130px, 30vw, 260px);
     aspect-ratio: 3 / 4;
     object-fit: cover;
     border-radius: 14px;
@@ -127,10 +137,10 @@
     box-shadow: 0 0 50px rgba(255, 255, 255, 0.35), 0 20px 60px rgba(0, 0, 0, 0.6);
     opacity: 0;
     transform: scale(0) rotate(0deg);
-    /* dramatic spin-in, then hand off to the infinite wobble */
+    /* delays are staggered per-photo via inline style in JS */
     animation:
-      heroSpinIn 1.6s cubic-bezier(0.18, 1.4, 0.4, 1) 6.6s forwards,
-      heroWobble 3.2s ease-in-out 8.2s infinite;
+      heroSpinIn 1.6s cubic-bezier(0.18, 1.4, 0.4, 1) forwards,
+      heroWobble 3.2s ease-in-out infinite;
   }
 
   @keyframes heroSpinIn {
@@ -164,13 +174,29 @@
   <main class="stage">
     <h1 class="title">hey guys</h1>
     <p class="subtitle">this website was made from the line at the tav</p>
-    <img id="hero" class="hero" alt="me at the tav"
-         onerror="this.style.display='none'" />
+    <div id="gallery" class="gallery"></div>
   </main>
 
   <script>
-    // cache-bust the photo so a freshly uploaded tav.jpg always shows
-    document.getElementById("hero").src = "tav.jpg?v=" + Date.now();
+    // The night's photos, in order. Add new filenames here as they're uploaded.
+    const PHOTOS = [
+      "IMG_6061.jpeg",
+      "IMG_6062.jpeg"
+    ];
+
+    const gallery = document.getElementById("gallery");
+    PHOTOS.forEach(function (name, i) {
+      const img = document.createElement("img");
+      img.className = "hero";
+      img.alt = "the tav, photo " + (i + 1);
+      // cache-bust so freshly uploaded photos always show
+      img.src = name + "?v=" + Date.now();
+      img.onerror = function () { img.style.display = "none"; };
+      // stagger: first photo lands after the subtitle, then ~0.5s apart
+      const spinDelay = 6.6 + i * 0.5;
+      img.style.animationDelay = spinDelay + "s, " + (spinDelay + 1.6) + "s";
+      gallery.appendChild(img);
+    });
   </script>
 
   <script>
