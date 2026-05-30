@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <title>hey guys</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -161,9 +164,14 @@
   <main class="stage">
     <h1 class="title">hey guys</h1>
     <p class="subtitle">this website was made from the line at the tav</p>
-    <img id="hero" class="hero" src="tav.jpg" alt="me at the tav"
+    <img id="hero" class="hero" alt="me at the tav"
          onerror="this.style.display='none'" />
   </main>
+
+  <script>
+    // cache-bust the photo so a freshly uploaded tav.jpg always shows
+    document.getElementById("hero").src = "tav.jpg?v=" + Date.now();
+  </script>
 
   <script>
     (function () {
